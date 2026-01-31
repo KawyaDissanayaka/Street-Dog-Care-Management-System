@@ -1,38 +1,119 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
+  position: relative;
+  background: radial-gradient(circle at 50% 50%, rgba(69, 162, 158, 0.05), transparent 70%);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border-radius: 16px;
+}
+
+.glass-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(11, 12, 16, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 2rem;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+}
+
+/* Typography & Neon Effects */
+.neon-text {
+  color: var(--text-primary);
+  text-shadow: 0 0 10px rgba(0, 224, 255, 0.5);
+}
+
+.highlight-text {
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+/* Buttons */
+.neon-button {
+  background: transparent;
+  color: var(--neon-cyan);
+  border: 1px solid var(--neon-cyan);
+  padding: 10px 24px;
+  font-family: var(--font-main);
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px rgba(0, 224, 255, 0.2);
+}
+
+.neon-button:hover {
+  background: var(--neon-cyan);
+  color: var(--bg-dark);
+  box-shadow: 0 0 20px rgba(0, 224, 255, 0.6);
+}
+
+/* Layout Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-top: 100px;
+  /* Space for fixed navbar */
+}
+
+/* Hexagon Image Mask - for that portfolio feel */
+.hexagon-wrapper {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-blue));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  padding: 5px;
+  /* Border thickness */
+  box-shadow: 0 0 30px var(--neon-cyan);
 }
 
-.App-link {
-  color: #61dafb;
+.hexagon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background-color: var(--bg-secondary);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Form Styles */
+.glass-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 12px;
+  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-family: var(--font-main);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0, 224, 255, 0.2);
+}
+
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
 }
