@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report a Street Dog - Street Dog Care</title>
+    <!-- Bootstrap 5 CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap Icons via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .brand-logo {
+            font-size: 2rem;
+            color: #d35400;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-align: center;
+        }
+        .card-custom {
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: none;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        .card-header-custom {
+            background-color: #fff;
+            border-bottom: 2px solid #fdf2e9;
+            padding: 2rem 2rem 1.5rem;
+        }
+        .btn-custom {
+            background-color: #d35400;
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s;
+        }
+        .btn-custom:hover {
+            background-color: #e67e22;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(211, 84, 0, 0.2);
+        }
+        .form-control, .form-select {
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #d35400;
+            box-shadow: 0 0 0 0.25rem rgba(211, 84, 0, 0.25);
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .info-box {
+            background-color: #e9f7ef;
+            border-left: 4px solid #27ae60;
+            color: #1e8449;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 0.95rem;
+        }
+        #imagePreviewContainer {
+            display: none;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #imagePreview {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-lg-8 col-xl-7">
+                
+                <!-- Branding -->
+                <div class="mb-4">
+                    <div class="brand-logo"><a href="/dashboard" class="text-decoration-none" style="color: inherit;"><i class="bi bi-suit-heart-fill text-danger me-2"></i>🐾 Street Dog Care</a></div>
+                </div>
+
+                <!-- Report Card -->
+                <div class="card card-custom">
+                    <div class="card-header-custom text-center">
+                        <h2 class="fw-bold mb-2" style="color: #2c3e50;">Report a Street Dog</h2>
+                        <p class="text-muted mb-0">Help us identify and provide care for a street dog in need.</p>
+                    </div>
+                    
+                    <div class="card-body p-4 p-md-5 pt-4">
+                        
+                        <!-- Info Box -->
+                        <div class="info-box mb-4">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <strong>Important:</strong> Please provide accurate information and a clear location so our rescue team can respond effectively.
+                        </div>
+
+                        <!-- Report Form -->
+                        <form id="reportForm" method="POST" action="/report-dog" enctype="multipart/form-data">
+                            
+                            <!-- Dog Name -->
+                            <div class="mb-4">
+                                <label for="dogName" class="form-label"><i class="bi bi-tag-fill text-muted me-2"></i>Dog Name <span class="text-muted fw-normal" style="font-size: 0.85em;">(Optional)</span></label>
+                                <input type="text" class="form-control" id="dogName" name="dogName" placeholder="Enter a name if known">
+                            </div>
+                            
+                            <!-- Location -->
+                            <div class="mb-4">
+                                <label for="location" class="form-label"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="location" name="location" placeholder="Enter the location where you found the dog" required>
+                            </div>
+
+                            <div class="row">
+                                <!-- Condition -->
+                                <div class="col-12 col-md-6 mb-4">
+                                    <label for="condition" class="form-label"><i class="bi bi-heart-pulse-fill text-warning me-2"></i>Dog Condition <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="condition" name="condition" required>
+                                        <option value="" selected disabled>Select condition</option>
+                                        <option value="healthy">Healthy</option>
+                                        <option value="injured">Injured</option>
+                                        <option value="sick">Sick</option>
+                                        <option value="critical">Critical</option>
+                                        <option value="unknown">Unknown</option>
+                                    </select>
+                                </div>
+
+                                <!-- Photo Upload -->
+                                <div class="col-12 col-md-6 mb-4">
+                                    <label for="photo" class="form-label"><i class="bi bi-camera-fill text-primary me-2"></i>Dog Photo <span class="text-muted fw-normal" style="font-size: 0.85em;">(Optional)</span></label>
+                                    <input class="form-control" type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp">
+                                    <div class="form-text mt-1 text-muted" style="font-size: 0.8rem;">Upload a clear photo of the dog (maximum 5MB)</div>
+                                    
+                                    <!-- Image Preview -->
+                                    <div id="imagePreviewContainer">
+                                        <img id="imagePreview" src="#" alt="Dog Preview">
+                                    </div>
+                                    <div id="fileSizeError" class="text-danger mt-1 d-none" style="font-size: 0.85rem;"><i class="bi bi-exclamation-triangle-fill me-1"></i>File size exceeds 5MB limit.</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label for="description" class="form-label"><i class="bi bi-card-text text-muted me-2"></i>Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" id="description" name="description" rows="4" minlength="10" placeholder="Describe the dog's condition, behavior, injuries, or anything else that may help our rescue team." required></textarea>
+                                <div class="form-text" style="font-size: 0.8rem;">Minimum 10 characters.</div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-flex flex-column flex-sm-row justify-content-between gap-3 mt-5">
+                                <a href="/dashboard" class="btn btn-outline-secondary px-4 py-2"><i class="bi bi-arrow-left me-2"></i>Cancel</a>
+                                <button type="submit" class="btn btn-custom px-4 py-2" id="submitBtn"><i class="bi bi-send-fill me-2"></i>Submit Dog Report</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <!-- Client-side Validation and Image Preview Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const photoInput = document.getElementById('photo');
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const previewImage = document.getElementById('imagePreview');
+            const fileSizeError = document.getElementById('fileSizeError');
+            const submitBtn = document.getElementById('submitBtn');
+            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+
+            // Listen for file selection
+            photoInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                
+                // Reset state
+                previewContainer.style.display = 'none';
+                fileSizeError.classList.add('d-none');
+                submitBtn.disabled = false;
+                
+                if (file) {
+                    // Check file size (Client-side validation)
+                    if (file.size > MAX_FILE_SIZE) {
+                        fileSizeError.classList.remove('d-none');
+                        submitBtn.disabled = true;
+                        photoInput.value = ""; // Clear the input
+                        return;
+                    }
+
+                    // Validate MIME type just in case (already handled by accept attribute)
+                    if (file.type.match('image/jpeg') || file.type.match('image/png') || file.type.match('image/webp')) {
+                        // Create a preview using FileReader
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImage.src = e.target.result;
+                            previewContainer.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        // Not an allowed image type
+                        photoInput.value = "";
+                        alert("Please select a valid image format (JPG, PNG, WEBP).");
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

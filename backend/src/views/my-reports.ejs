@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dog Reports - Street Dog Care</title>
+    <!-- Bootstrap 5 CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- Bootstrap Icons via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Navbar Styling */
+        .navbar-custom {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .navbar-brand {
+            color: #d35400 !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        .nav-link {
+            font-weight: 500;
+            color: #495057 !important;
+        }
+        .nav-link:hover {
+            color: #d35400 !important;
+        }
+        .nav-link.active {
+            color: #d35400 !important;
+            border-bottom: 2px solid #d35400;
+        }
+        /* Page Header */
+        .page-header {
+            background-color: #ffffff;
+            padding: 2.5rem 0;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 2.5rem;
+        }
+        .page-title {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        /* Report Cards */
+        .report-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .report-img-wrapper {
+            height: 220px;
+            overflow: hidden;
+            background-color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        .report-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .placeholder-icon {
+            font-size: 5rem;
+            color: #bdc3c7;
+        }
+        .report-dog-name {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.25rem;
+            margin-bottom: 0.2rem;
+        }
+        .report-date {
+            font-size: 0.85rem;
+            color: #95a5a6;
+            margin-bottom: 1rem;
+        }
+        .info-row {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #7f8c8d;
+            width: 90px;
+            display: inline-block;
+        }
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #d35400;
+        }
+        .btn-custom {
+            background-color: #d35400;
+            color: white;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s;
+        }
+        .btn-custom:hover {
+            background-color: #e67e22;
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard"><i class="bi bi-suit-heart-fill text-danger me-2"></i>🐾 Street Dog Care</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/report-dog">Report a Dog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/my-reports">My Reports</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="/logout"><i class="bi bi-box-arrow-right me-1"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">My Dog Reports</h1>
+            <p class="page-subtitle mb-0">Track the street dogs you have reported and follow their care status.</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mb-5">
+        
+        <% if (reports && reports.length > 0) { %>
+            <div class="row g-4">
+                <% reports.forEach(report => { %>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card report-card h-100">
+                            
+                            <!-- Photo -->
+                            <div class="report-img-wrapper">
+                                <% if (report.photo) { %>
+                                    <img src="/uploads/<%= report.photo %>" class="report-img" alt="Dog Photo">
+                                <% } else { %>
+                                    <i class="bi bi-image placeholder-icon"></i>
+                                <% } %>
+                            </div>
+                            
+                            <div class="card-body p-4">
+                                <!-- Name & Date -->
+                                <h3 class="report-dog-name"><%= report.dogName ? report.dogName : 'Unnamed Dog' %></h3>
+                                <p class="report-date"><i class="bi bi-calendar-event me-1"></i>Reported: <%= new Date(report.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }) %></p>
+                                
+                                <hr class="my-3" style="opacity: 0.1;">
+                                
+                                <!-- Location -->
+                                <div class="info-row">
+                                    <span class="info-label"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Location:</span> 
+                                    <span class="fw-medium"><%= report.location %></span>
+                                </div>
+                                
+                                <!-- Condition Badge -->
+                                <div class="info-row">
+                                    <span class="info-label"><i class="bi bi-heart-pulse-fill text-warning me-1"></i>Condition:</span> 
+                                    <% 
+                                        let conditionBadgeClass = 'bg-secondary';
+                                        let conditionLabel = 'Unknown';
+                                        if (report.condition === 'healthy') { conditionBadgeClass = 'bg-success'; conditionLabel = 'Healthy'; }
+                                        else if (report.condition === 'injured') { conditionBadgeClass = 'bg-warning text-dark'; conditionLabel = 'Injured'; }
+                                        else if (report.condition === 'sick') { conditionBadgeClass = 'bg-danger'; conditionLabel = 'Sick'; }
+                                        else if (report.condition === 'critical') { conditionBadgeClass = 'bg-dark'; conditionLabel = 'Critical'; }
+                                    %>
+                                    <span class="badge <%= conditionBadgeClass %>"><%= conditionLabel %></span>
+                                </div>
+                                
+                                <!-- Status Badge -->
+                                <div class="info-row">
+                                    <span class="info-label"><i class="bi bi-info-circle-fill text-primary me-1"></i>Status:</span> 
+                                    <% 
+                                        let statusBadgeClass = 'bg-secondary';
+                                        let statusLabel = 'Reported';
+                                        if (report.status === 'reported') { statusBadgeClass = 'bg-primary'; statusLabel = 'Reported'; }
+                                        else if (report.status === 'rescued') { statusBadgeClass = 'bg-info text-dark'; statusLabel = 'Rescued'; }
+                                        else if (report.status === 'under_treatment') { statusBadgeClass = 'bg-warning text-dark'; statusLabel = 'Under Treatment'; }
+                                        else if (report.status === 'adopted') { statusBadgeClass = 'bg-success'; statusLabel = 'Adopted'; }
+                                        else if (report.status === 'closed') { statusBadgeClass = 'bg-secondary'; statusLabel = 'Closed'; }
+                                    %>
+                                    <span class="badge <%= statusBadgeClass %>"><%= statusLabel %></span>
+                                </div>
+                                
+                                <!-- Description -->
+                                <div class="mt-3 pt-3" style="border-top: 1px dashed #eaeaea;">
+                                    <p class="card-text text-muted" style="font-size: 0.9rem; line-height: 1.5;"><%= report.description %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            
+            <!-- Empty State -->
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="empty-state">
+                        <div class="empty-icon">🐾</div>
+                        <h2 class="fw-bold mb-3" style="color: #2c3e50;">No Dog Reports Yet</h2>
+                        <p class="text-muted mb-4 fs-5">You haven't reported any street dogs yet.<br>If you find a dog that needs help, you can submit a report and our team can review it.</p>
+                        <a href="/report-dog" class="btn btn-custom"><i class="bi bi-megaphone-fill me-2"></i>Report a Dog</a>
+                    </div>
+                </div>
+            </div>
+            
+        <% } %>
+
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

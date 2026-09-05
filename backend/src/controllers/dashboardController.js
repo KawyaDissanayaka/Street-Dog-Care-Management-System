@@ -1,23 +1,41 @@
 const User = require('../models/User');
+const DogReport = require('../models/DogReport');
 
 const getDashboard = async (req, res) => {
     try {
-        // 1. Get the logged-in user's ID from the session
         const userId = req.session.userId;
-
-        // 2. Find the user in MongoDB, excluding the password field
         const user = await User.findById(userId).select('-password');
 
-        // 3. If user doesn't exist in the database (e.g. deleted recently)
         if (!user) {
-            // Destroy the invalid session and redirect to login
             return req.session.destroy((err) => {
                 res.redirect('/login');
             });
         }
 
-        // 4. Render the dashboard page and pass the user data
-        res.render('dashboard', { user: user });
+        // Calculate statistics
+        const totalReports = await DogReport.countDocuments({ reportedBy: userId });
+        const rescuedDogs = await DogReport.countDocuments({ reportedBy: userId, status: "rescued" });
+        const underTreatment = await DogReport.countDocuments({ reportedBy: userId, status: "under_treatment" });
+        const adoptedDogs = await DogReport.countDocuments({ reportedBy: userId, status: "adopted" });
+        const urgentReports = await DogReport.countDocuments({ 
+            reportedBy: userId, 
+            condition: { $in: ["injured", "critical"] } 
+        });
+
+        const stats = {
+            totalReports,
+            rescuedDogs,
+            underTreatment,
+            adoptedDogs,
+            urgentReports
+        };
+
+        // Get latest 3 reports
+        const recentReports = await DogReport.find({ reportedBy: userId })
+            .sort({ createdAt: -1 })
+            .limit(3);
+
+        res.render('dashboard', { user, stats, recentReports });
 
     } catch (error) {
         console.error("Dashboard error:", error);

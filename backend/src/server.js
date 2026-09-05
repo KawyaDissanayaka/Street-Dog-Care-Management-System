@@ -4,6 +4,9 @@ const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
+const dogReportRoutes = require('./routes/dogReportRoutes');
+
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,6 +23,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/uploads", express.static(path.join(__dirname, '../uploads')));
 
 // Session Configuration
 app.use(session({
@@ -37,6 +41,8 @@ app.use(session({
 
 // Routes
 app.use("/", authRoutes);
+app.use("/", dogReportRoutes);
+app.use("/", adminRoutes);
 
 app.get('/', (req, res) => {
     res.render('index', { title: 'Street Dog Care System' });
