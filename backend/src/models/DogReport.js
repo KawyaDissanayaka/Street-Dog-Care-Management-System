@@ -32,6 +32,15 @@ const dogReportSchema = new mongoose.Schema({
         type: String,
         enum: ["reported", "rescued", "under_treatment", "adopted", "closed"],
         default: "reported"
+    },
+    assignedVolunteer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null
+    },
+    isAvailableForAdoption: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true // Automatically manages createdAt and updatedAt

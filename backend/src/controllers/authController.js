@@ -112,8 +112,14 @@ const loginUser = async (req, res) => {
         req.session.role = user.role;
         req.session.userName = user.name;
 
-        // 8. Redirect to dashboard
-        res.redirect('/dashboard');
+        // 8. Redirect to correct dashboard based on role
+        if (user.role === 'admin') {
+            res.redirect('/admin/dashboard');
+        } else if (user.role === 'volunteer') {
+            res.redirect('/volunteer/dashboard');
+        } else {
+            res.redirect('/dashboard');
+        }
 
     } catch (error) {
         console.error("Login error:", error);

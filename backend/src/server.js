@@ -7,6 +7,8 @@ const authRoutes = require('./routes/authRoutes');
 const dogReportRoutes = require('./routes/dogReportRoutes');
 
 const adminRoutes = require('./routes/adminRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
+const adoptionRoutes = require('./routes/adoptionRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -43,6 +45,8 @@ app.use(session({
 app.use("/", authRoutes);
 app.use("/", dogReportRoutes);
 app.use("/", adminRoutes);
+app.use("/", volunteerRoutes);
+app.use("/", adoptionRoutes);
 
 app.get('/', (req, res) => {
     res.render('index', { title: 'Street Dog Care System' });

@@ -9,16 +9,38 @@ const requireAuth = (req, res, next) => {
 };
 
 const requireAdmin = (req, res, next) => {
-    // Check if user is authenticated AND has the "admin" role
-    if (req.session && req.session.userId && req.session.role === "admin") {
-        next(); // User is an admin, proceed
-    } else {
-        // User is not an admin, redirect to dashboard
-        res.redirect('/dashboard');
+    if (!req.session.userId || req.session.role !== 'admin') {
+        return res.redirect('/dashboard');
     }
+    next();
+};
+
+const requireVolunteer = (req, res, next) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    if (req.session.role !== 'volunteer' && req.session.role !== 'admin') {
+        return res.redirect('/dashboard');
+    }
+    next();
+};
+
+const requireUser = (req, res, next) => {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    if (req.session.role === 'admin') {
+        return res.redirect('/admin/dashboard');
+    }
+    if (req.session.role === 'volunteer') {
+        return res.redirect('/volunteer/dashboard');
+    }
+    next();
 };
 
 module.exports = {
     requireAuth,
-    requireAdmin
+    requireAdmin,
+    requireVolunteer,
+    requireUser
 };

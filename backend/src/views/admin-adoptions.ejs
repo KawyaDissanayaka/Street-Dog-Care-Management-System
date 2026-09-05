@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adoption Requests - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar-custom { background-color: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .navbar-brand { color: #d35400 !important; font-weight: 700; font-size: 1.5rem; }
+        .nav-link { font-weight: 500; color: #495057 !important; }
+        .nav-link:hover, .nav-link.active { color: #d35400 !important; }
+        .page-header { background-color: #fff; border-bottom: 1px solid #eaeaea; padding: 2.5rem 0; margin-bottom: 2rem; }
+        .filter-section { background: #fff; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); padding: 1.5rem; margin-bottom: 2rem; }
+        .app-card { border: none; border-radius: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.06); }
+        .dog-thumb { width: 65px; height: 65px; border-radius: 0.6rem; object-fit: cover; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top py-3">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard"><i class="bi bi-suit-heart-fill text-danger me-2"></i>🐾 Street Dog Care</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto ms-lg-4">
+                <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Admin Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/reports">Dog Reports</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/admin/adoptions">Adoption Requests</a></li>
+            </ul>
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item me-3"><span class="badge bg-danger rounded-pill px-3 py-2"><i class="bi bi-shield-lock me-1"></i>Admin</span></li>
+                <li class="nav-item"><a class="nav-link text-danger" href="/logout"><i class="bi bi-box-arrow-right me-1"></i>Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="page-header">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1 class="fw-bold mb-1">Adoption Requests</h1>
+            <p class="text-muted mb-0">Review and manage all dog adoption applications.</p>
+        </div>
+        <span class="badge bg-secondary fs-6"><i class="bi bi-file-earmark-person me-1"></i>Total: <%= adoptions.length %></span>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Alerts -->
+    <% if (success === 'status-updated') { %>
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle me-2"></i>Adoption request status updated successfully.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+    <% if (error) { %>
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>An error occurred. Please try again.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <div class="row g-2 align-items-center">
+            <div class="col-12 col-md-6">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search by dog name, applicant, or email...">
+            </div>
+            <div class="col-12 col-md-3">
+                <select class="form-select" id="statusFilter">
+                    <option value="">All Statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="col-12 col-md-3">
+                <button class="btn btn-outline-secondary w-100" onclick="clearFilters()"><i class="bi bi-x-circle me-1"></i>Clear Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted small" id="countLabel">Showing <span id="countVisible"><%= adoptions.length %></span> of <%= adoptions.length %> applications</span>
+    </div>
+
+    <% if (adoptions.length > 0) { %>
+        <div class="d-flex flex-column gap-3" id="adoptionsList">
+            <% adoptions.forEach(adoption => {
+                let statusBadge = 'bg-warning text-dark', statusLabel = 'Pending';
+                if (adoption.status === 'approved') { statusBadge = 'bg-success'; statusLabel = 'Approved'; }
+                else if (adoption.status === 'rejected') { statusBadge = 'bg-danger'; statusLabel = 'Rejected'; }
+
+                let condClass = 'bg-secondary', condLabel = 'Unknown';
+                if (adoption.report) {
+                    if (adoption.report.condition === 'healthy') { condClass = 'bg-success'; condLabel = 'Healthy'; }
+                    else if (adoption.report.condition === 'injured') { condClass = 'bg-warning text-dark'; condLabel = 'Injured'; }
+                    else if (adoption.report.condition === 'sick') { condClass = 'bg-danger'; condLabel = 'Sick'; }
+                    else if (adoption.report.condition === 'critical') { condClass = 'bg-dark'; condLabel = 'Critical'; }
+                }
+            %>
+            <div class="card app-card p-4 adoption-item"
+                 data-dog="<%= (adoption.report ? (adoption.report.dogName || '') : '').toLowerCase() %>"
+                 data-applicant="<%= (adoption.applicant ? adoption.applicant.name : '').toLowerCase() %>"
+                 data-email="<%= (adoption.applicant ? adoption.applicant.email : '').toLowerCase() %>"
+                 data-status="<%= adoption.status %>">
+                <div class="row g-3 align-items-start">
+                    <!-- Dog thumb -->
+                    <div class="col-auto">
+                        <% if (adoption.report && adoption.report.photo) { %>
+                            <img src="/uploads/<%= adoption.report.photo %>" class="dog-thumb" alt="Dog">
+                        <% } else { %>
+                            <div class="dog-thumb bg-light border d-flex align-items-center justify-content-center rounded-3">
+                                <i class="bi bi-camera-video-off text-muted"></i>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <div class="col">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                            <div>
+                                <h6 class="fw-bold mb-0"><%= adoption.report ? (adoption.report.dogName || 'Unnamed Dog') : 'Dog Removed' %></h6>
+                                <% if (adoption.report) { %>
+                                    <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i><%= adoption.report.location %></span>
+                                    <span class="badge <%= condClass %> ms-2 small"><%= condLabel %></span>
+                                <% } %>
+                            </div>
+                            <span class="badge <%= statusBadge %> px-3 py-2">
+                                <i class="bi bi-<%= adoption.status === 'approved' ? 'check-circle' : adoption.status === 'rejected' ? 'x-circle' : 'hourglass-split' %> me-1"></i>
+                                <%= statusLabel %>
+                            </span>
+                        </div>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="text-muted small fw-bold">Applicant</div>
+                                <div class="small"><%= adoption.applicant ? adoption.applicant.name : 'Unknown' %></div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="text-muted small fw-bold">Email</div>
+                                <div class="small"><%= adoption.applicant ? adoption.applicant.email : '—' %></div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="text-muted small fw-bold">Phone</div>
+                                <div class="small"><%= adoption.fullName %>'s: <%= adoption.phone %></div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="text-muted small fw-bold">Applied On</div>
+                                <div class="small"><%= new Date(adoption.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }) %></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-bold">Address</div>
+                            <div class="small"><%= adoption.address %></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-bold">Reason for Adoption</div>
+                            <p class="small text-dark mb-0" style="white-space: pre-line;"><%= adoption.reason %></p>
+                        </div>
+
+                        <!-- Action form -->
+                        <form method="POST" action="/admin/adoptions/<%= adoption._id %>/status"
+                              onsubmit="return confirm('Are you sure you want to change this adoption request status?');"
+                              class="d-flex gap-2 flex-wrap align-items-center border-top pt-3 mt-2">
+                            <select name="status" class="form-select form-select-sm" style="width: auto;">
+                                <option value="pending" <%= adoption.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                                <option value="approved" <%= adoption.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                                <option value="rejected" <%= adoption.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm px-3">
+                                <i class="bi bi-arrow-repeat me-1"></i>Update Status
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <div class="text-center py-5 bg-white rounded-4 shadow-sm">
+            <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+            <h4 class="fw-bold mt-3">No adoption requests yet.</h4>
+            <p class="text-muted">Adoption applications will appear here once users apply.</p>
+            <a href="/admin/reports" class="btn btn-outline-primary mt-2"><i class="bi bi-file-earmark-text me-1"></i>Go to Dog Reports</a>
+        </div>
+    <% } %>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const items = document.querySelectorAll('.adoption-item');
+    const countVisible = document.getElementById('countVisible');
+
+    function filterItems() {
+        const q = searchInput.value.toLowerCase();
+        const st = statusFilter.value;
+        let count = 0;
+        items.forEach(item => {
+            const textMatch = item.dataset.dog.includes(q) || item.dataset.applicant.includes(q) || item.dataset.email.includes(q);
+            const statusMatch = !st || item.dataset.status === st;
+            if (textMatch && statusMatch) { item.style.display = ''; count++; }
+            else item.style.display = 'none';
+        });
+        countVisible.textContent = count;
+    }
+
+    function clearFilters() {
+        searchInput.value = '';
+        statusFilter.value = '';
+        filterItems();
+    }
+
+    searchInput.addEventListener('input', filterItems);
+    statusFilter.addEventListener('change', filterItems);
+</script>
+</body>
+</html>
