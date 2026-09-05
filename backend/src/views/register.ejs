@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Street Dog Care</title>
+    <!-- Bootstrap 5 CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .brand-logo {
+            font-size: 2rem;
+            color: #d35400; /* Warm orange color for animal care */
+            font-weight: bold;
+        }
+        .card-custom {
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: none;
+        }
+        .btn-custom {
+            background-color: #d35400;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.6rem;
+            font-weight: 500;
+        }
+        .btn-custom:hover {
+            background-color: #e67e22;
+            color: white;
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.6rem;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                
+                <!-- Branding Header -->
+                <div class="text-center mb-4">
+                    <div class="brand-logo mb-2">🐾 Street Dog Care</div>
+                    <p class="text-muted">Together, we can give street dogs a safer and better life.</p>
+                </div>
+
+                <!-- Registration Card -->
+                <div class="card card-custom p-4">
+                    <div class="card-body">
+                        <h3 class="text-center mb-4">Create Your Account</h3>
+                        
+                        <!-- Form targeting POST /register -->
+                        <form method="POST" action="/register">
+                            
+                            <!-- Full Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">👤 Full Name</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label">📧 Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                            </div>
+                            
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label">🔒 Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Create a password (min 6 characters)" minlength="6" required>
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">📱 Phone Number <span class="text-muted" style="font-size: 0.85em;">(Optional)</span></label>
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number">
+                            </div>
+                            
+                            <!-- Address -->
+                            <div class="mb-4">
+                                <label for="address" class="form-label">🏠 Address <span class="text-muted" style="font-size: 0.85em;">(Optional)</span></label>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address">
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2 mb-3">
+                                <button type="submit" class="btn btn-custom btn-lg">Create Account</button>
+                            </div>
+                        </form>
+                        
+                        <!-- Login Link -->
+                        <div class="text-center mt-3">
+                            <p class="mb-0">Already have an account? <a href="/login" class="text-decoration-none" style="color: #d35400; font-weight: 500;">Login</a></p>
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
