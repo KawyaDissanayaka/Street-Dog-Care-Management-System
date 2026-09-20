@@ -59,7 +59,8 @@
                         <h3 class="text-center mb-4">Create Your Account</h3>
                         
                         <!-- Form targeting POST /register -->
-                        <form method="POST" action="/register">
+                        <form id="registerForm">
+                            <div id="alertBox" style="display: none;"></div>
                             
                             <!-- Full Name -->
                             <div class="mb-3">
@@ -110,6 +111,45 @@
     </div>
 
     <!-- Bootstrap 5 JS Bundle via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('alertBox');
+            alertBox.style.display = 'none';
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    alertBox.className = 'alert alert-success mt-3';
+                    alertBox.textContent = result.message + '. Redirecting to login...';
+                    alertBox.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    alertBox.className = 'alert alert-danger mt-3';
+                    alertBox.textContent = result.message || 'Registration failed';
+                    alertBox.style.display = 'block';
+                }
+            } catch (error) {
+                alertBox.className = 'alert alert-danger mt-3';
+                alertBox.textContent = 'An error occurred. Please try again.';
+                alertBox.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
